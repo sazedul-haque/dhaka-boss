@@ -22,7 +22,7 @@ exports.getLogByCustomerId = (req, res, next) => {
             return Log.find({ customer: customerId})
         })
         .then(logs => {
-            res.status(200).json({ data: logs });
+            res.status(200).json({ customerId: customerId, data: logs });
         })
         .catch(err => {
             if(!err.statusCode) {
