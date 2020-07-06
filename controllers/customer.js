@@ -16,6 +16,20 @@ exports.getCustomers = (req, res, next) => {
         })
 };
 
+exports.getSingleCustomer = (req, res, next) => {
+    const id = req.params.customerId;
+    Customer.findById(id)
+        .then(customer => {
+            res.status(200).json({ data: customer });
+        })
+        .catch(err => {
+            if (!err.statusCode) {
+                err.statusCode = 500;
+            }
+            next(err);
+        })
+}
+
 exports.getCustomersWithLog = async (req, res, next) => {
     const customers = await Customer.find()
     const promises = customers.map(async customer => {

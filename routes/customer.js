@@ -6,13 +6,14 @@ const { check } = require('express-validator');
 const CustomerController = require('../controllers/customer');
 const Customer = require('../models/customer');
 
-/* GET Customers Nisting. */
+
 router.get('/customers', CustomerController.getCustomers);
+
+router.get('/customers/:customerId', CustomerController.getSingleCustomer);
 
 router.get('/customers/logs', CustomerController.getCustomersWithLog);
 
 
-/* POST New Customer. */
 router.post('/customers', [
   check('email').isEmail().withMessage('Please enter a valid email.').normalizeEmail().custom((value, { req }) => {
     return Customer.findOne({ email: value })
@@ -28,7 +29,6 @@ router.post('/customers', [
 ], CustomerController.createCustomer);
 
 
-/* PUT New Customer. */
 router.put('/customers/:customerId', [
   check('email').isEmail().withMessage('Please enter a valid email.').normalizeEmail(),
   check('name').trim(),
@@ -37,7 +37,6 @@ router.put('/customers/:customerId', [
 ], CustomerController.updateCustomer);
 
 
-/* DELETE Customer. */
 router.delete('/customers/:customerId', CustomerController.deleteCustomer);
 
 module.exports = router;
