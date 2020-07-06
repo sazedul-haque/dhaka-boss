@@ -4,6 +4,8 @@ const path = require('path');
 const cookieParser = require('cookie-parser');
 const logger = require('morgan');
 const mongoose = require('mongoose');
+const multer = require('multer');
+const upload = multer();
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -31,8 +33,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/auth', customerRouter);
-app.use('/auth', logRouter);
+app.use('/auth', upload.none(), customerRouter);
+app.use('/auth', upload.none(), logRouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
