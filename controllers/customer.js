@@ -4,9 +4,27 @@ const Customer = require('../models/customer');
 const Log = require('../models/log');
 
 exports.getCustomers = (req, res, next) => {
-    Customer.find()
+    const currentPage = Number(req.query.page) || 1;
+    const previousPage = currentPage > 1 ? currentPage -1 : null;
+    const perPage = 4;
+    let totalItems;
+    let totalPages;
+    Customer.find().countDocuments()
+        .then(count => {
+            totalItems = count;
+            totalPages = Math.ceil(count/perPage)
+            return Customer.find().skip((currentPage - 1) * perPage).limit(perPage)
+        })
         .then(customers => {
-            res.status(200).json({ data: customers });
+            res.json({ 
+                data: customers, 
+                totalItems: totalItems,
+                pages: totalPages,
+                itemPerPage: perPage, 
+                currentPage: currentPage,
+                next: currentPage < totalPages ? currentPage + 1 : null,
+                previous: previousPage
+            });
         })
         .catch(err => {
             if (!err.statusCode) {
@@ -14,6 +32,7 @@ exports.getCustomers = (req, res, next) => {
             }
             next(err);
         })
+        
 };
 
 exports.getSingleCustomer = (req, res, next) => {
