@@ -11,7 +11,7 @@ router.get('/customers', CustomerController.getCustomers);
 
 router.get('/customers/:customerId', CustomerController.getSingleCustomer);
 
-router.get('/customers/logs', CustomerController.getCustomersWithLog);
+router.get('/customerlogs', CustomerController.getCustomersWithLog);
 
 
 router.post('/customers', [
